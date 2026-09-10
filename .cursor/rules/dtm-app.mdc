@@ -1,0 +1,17 @@
+---
+description: 音楽制作アプリ固有の運用ルール
+alwaysApply: true
+---
+
+# 音楽制作アプリ
+
+家庭用の静的Webアプリ（`index.html` + `data/*.js` + `js/app.js`）。日本語UI。PowerShellを使う。
+
+- アプリ名は「音楽制作アプリ」。公開先は GitHub Pages（`ongaku-seisaku`）
+- ユーザー差分は `localStorage` `uchiNoDTM.v1` と IndexedDB。端末間は［引き継ぎ］のバックアップJSONで移す
+- 所有機材・購入検討・メーカー・製品データを勝手に増やしたり、所有状態を推測で書き換えない
+- 用語は一覧用 `listSummary` と詳細用 `description` を分ける。英字名は読み（`sortYomi` / `displayYomi`）と aliases を付ける。五十音順は日本語読み
+- 同じ意味の用語を二重登録しない。表記ゆれは aliases
+- 製品画像は公式の当該型番のみ。別型番で代用しない
+- キャッシュ更新は `index.html` の `?v=` と `service-worker.js` の `CACHE_NAME` を必要なら上げる
+- コメントは原則書かない。新しいファイルより既存編集を優先する

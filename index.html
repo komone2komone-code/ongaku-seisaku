@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#F3F7FB" />
+  <title>音楽制作アプリ</title>
+  <meta name="application-name" content="音楽制作アプリ" />
+  <meta name="apple-mobile-web-app-title" content="音楽制作アプリ" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="icon" type="image/png" href="./assets/icons/app-icon.png" />
+  <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="stylesheet" href="./css/styles.css?v=51" />
+</head>
+<body>
+  <div class="app-shell">
+    <div class="chrome" id="appChrome">
+    <header class="topbar">
+      <div class="topbar-lead">
+        <a class="brand" href="#/" id="brandLink">
+          <span class="brand-icon" id="brandIcon">
+            <img id="appIconImg" src="./assets/icons/app-icon.png" alt="" />
+          </span>
+          <span>
+            <p class="eyebrow">HOME DTM GUIDE</p>
+            <h1>音楽制作アプリ</h1>
+          </span>
+        </a>
+        <button type="button" class="transfer-btn" id="transferBtn">引き継ぎ</button>
+      </div>
+      <form class="header-search" id="headerSearchForm" hidden>
+        <label class="sr-only" for="headerSearchInput">検索</label>
+        <input id="headerSearchInput" type="search" placeholder="機材・ソフト・DTM用語を検索" autocomplete="off" />
+      </form>
+    </header>
+    <nav id="appNav" class="app-nav" hidden aria-label="カテゴリー"></nav>
+    </div>
+    <main id="app"></main>
+  </div>
+
+  <input id="photoInput" type="file" accept="image/*" hidden />
+  <input id="backupFileInput" type="file" accept="application/json,.json" hidden />
+
+  <dialog id="renameDialog" class="dialog">
+    <form id="renameForm" class="dialog-card" method="dialog">
+      <div class="dialog-head">
+        <h2>名前を変更</h2>
+        <button type="button" class="icon-btn" data-close-dialog="renameDialog" aria-label="閉じる">×</button>
+      </div>
+      <label>
+        <span>名前</span>
+        <input id="renameInput" required maxlength="80" />
+      </label>
+      <div class="dialog-actions">
+        <button type="button" class="ghost-btn" data-close-dialog="renameDialog">キャンセル</button>
+        <button type="submit" class="primary-btn">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="editDialog" class="dialog">
+    <form id="editForm" class="dialog-card" method="dialog">
+      <div class="dialog-head">
+        <h2 id="editDialogTitle">編集</h2>
+        <button type="button" class="icon-btn" data-close-dialog="editDialog" aria-label="閉じる">×</button>
+      </div>
+      <div id="editFields"></div>
+      <p id="editError" class="error" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button type="button" class="ghost-btn" data-close-dialog="editDialog">キャンセル</button>
+        <button type="submit" class="primary-btn">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="markOwnedDialog" class="dialog">
+    <form id="markOwnedForm" class="dialog-card" method="dialog">
+      <div class="dialog-head">
+        <h2>購入済みにする</h2>
+        <button type="button" class="icon-btn" data-close-dialog="markOwnedDialog" aria-label="閉じる">×</button>
+      </div>
+      <p id="markOwnedName" class="dialog-item-name"></p>
+      <p class="dialog-note">この製品を購入済みにして、我が家のDTM環境へ移しますか？</p>
+      <label>
+        <span>購入日（任意）</span>
+        <input id="markOwnedDate" type="date" />
+      </label>
+      <label>
+        <span>購入価格（任意）</span>
+        <input id="markOwnedPrice" maxlength="40" placeholder="例：4,680円" />
+      </label>
+      <div id="markOwnedCatWrap" hidden>
+        <label>
+          <span>配置するカテゴリー</span>
+          <select id="markOwnedGroup"></select>
+        </label>
+      </div>
+      <div class="dialog-actions">
+        <button type="button" class="ghost-btn" data-close-dialog="markOwnedDialog">キャンセル</button>
+        <button type="submit" class="primary-btn">購入済みにする</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="videoDialog" class="dialog">
+    <form id="videoForm" class="dialog-card" method="dialog">
+      <div class="dialog-head">
+        <h2 id="videoDialogTitle">動画を追加</h2>
+        <button type="button" class="icon-btn" data-close-dialog="videoDialog" aria-label="閉じる">×</button>
+      </div>
+      <label>
+        <span>YouTube URL</span>
+        <input id="videoUrlInput" inputmode="url" placeholder="https://www.youtube.com/watch?v=..." />
+      </label>
+      <label>
+        <span>動画タイトル</span>
+        <input id="videoTitleInput" maxlength="120" placeholder="例：MPC Studio 基本操作" />
+      </label>
+      <label>
+        <span>何が分かる動画か</span>
+        <input id="videoWhatInput" maxlength="160" placeholder="例：サンプリングの流れ" />
+      </label>
+      <label>
+        <span>開始時間</span>
+        <input id="videoStartInput" placeholder="4:32" />
+      </label>
+      <label>
+        <span>この開始位置の名前</span>
+        <input id="videoMarkerInput" maxlength="80" placeholder="例：サンプリング" />
+      </label>
+      <label>
+        <span>分類</span>
+        <select id="videoCategoryInput"></select>
+      </label>
+      <label>
+        <span>関連する機材／ソフト／用語</span>
+        <select id="videoRelatedInput"></select>
+      </label>
+      <label>
+        <span>メモ</span>
+        <textarea id="videoMemoInput" rows="2" maxlength="200"></textarea>
+      </label>
+      <p id="videoError" class="error" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button type="button" class="ghost-btn" data-close-dialog="videoDialog">キャンセル</button>
+        <button type="submit" class="primary-btn">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="playerDialog" class="dialog player-dialog">
+    <div class="dialog-card player-card">
+      <div class="dialog-head">
+        <div>
+          <p class="section-label" id="playerCat"></p>
+          <h2 id="playerTitle"></h2>
+        </div>
+        <button type="button" class="icon-btn" data-close-dialog="playerDialog" aria-label="閉じる">×</button>
+      </div>
+      <div class="player-frame">
+        <iframe id="playerFrame" title="YouTube player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <p id="playerMemo" class="muted"></p>
+    </div>
+  </dialog>
+
+  <dialog id="patchDialog" class="dialog">
+    <form id="patchForm" class="dialog-card" method="dialog">
+      <div class="dialog-head">
+        <h2 id="patchDialogTitle">機材を追加</h2>
+        <button type="button" class="icon-btn" data-close-dialog="patchDialog" aria-label="閉じる">×</button>
+      </div>
+      <div id="patchFields"></div>
+      <p id="patchError" class="error" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button type="button" class="ghost-btn" data-close-dialog="patchDialog">キャンセル</button>
+        <button type="submit" class="primary-btn" id="patchSubmit">追加</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="transferDialog" class="dialog">
+    <div class="dialog-card">
+      <div class="dialog-head">
+        <h2>引き継ぎ</h2>
+        <button type="button" class="icon-btn" data-close-dialog="transferDialog" aria-label="閉じる">×</button>
+      </div>
+      <div class="transfer-help">
+        <p><strong>普段のバックアップ</strong><br>機材やメモを追加・変更したあと、定期的に［バックアップを書き出す］でファイルを保存してください。</p>
+        <p><strong>スマホ・PCを買い替えたとき</strong><br>新しい端末で音楽制作アプリを開き、［引き継ぎ］→［バックアップを読み込む］から保存しておいたファイルを選択してください。</p>
+      </div>
+      <div class="transfer-actions">
+        <button type="button" class="primary-btn" id="backupExportBtn">バックアップを書き出す</button>
+        <button type="button" class="ghost-btn" id="backupImportBtn">バックアップを読み込む</button>
+      </div>
+      <p id="transferStatus" class="muted" aria-live="polite"></p>
+    </div>
+  </dialog>
+
+  <dialog id="transferOverwriteDialog" class="dialog">
+    <form id="transferOverwriteForm" class="dialog-card" method="dialog">
+      <div class="dialog-head">
+        <h2>バックアップを読み込む</h2>
+        <button type="button" class="icon-btn" data-close-dialog="transferOverwriteDialog" aria-label="閉じる">×</button>
+      </div>
+      <p class="dialog-note">現在のデータに上書きしますか？</p>
+      <div class="dialog-actions">
+        <button type="button" class="ghost-btn" data-close-dialog="transferOverwriteDialog">キャンセル</button>
+        <button type="submit" class="primary-btn">上書きする</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="workflowDialog" class="dialog">
+    <form id="workflowForm" class="dialog-card" method="dialog">
+      <div class="dialog-head">
+        <h2>ワークフローを追加</h2>
+        <button type="button" class="icon-btn" data-close-dialog="workflowDialog" aria-label="閉じる">×</button>
+      </div>
+      <label>
+        <span>ワークフロー名</span>
+        <input id="wfTitleInput" maxlength="80" placeholder="例：iPhoneで鼻歌 → iPadでアレンジ → Macで仕上げ" />
+      </label>
+      <label>
+        <span>概要</span>
+        <input id="wfSummaryInput" maxlength="160" />
+      </label>
+      <div class="field-block">
+        <span>使用する端末</span>
+        <div id="wfDevices" class="check-grid"></div>
+      </div>
+      <label>
+        <span>手順（1行が1ステップ。機種名と内容を「：」で区切る）</span>
+        <textarea id="wfStepsInput" rows="5" placeholder="iPhone：鼻歌を記録する&#10;iPad：曲の形にする&#10;MacBook Pro：Logicで本制作"></textarea>
+      </label>
+      <label>
+        <span>使用アプリ</span>
+        <input id="wfAppsInput" maxlength="160" placeholder="例：ボイスメモ、GarageBand、Logic Pro" />
+      </label>
+      <label>
+        <span>ファイルの受け渡し方法</span>
+        <textarea id="wfTransferInput" rows="2" placeholder="例：iCloud、AirDrop"></textarea>
+      </label>
+      <label>
+        <span>メモ</span>
+        <textarea id="wfMemoInput" rows="2"></textarea>
+      </label>
+      <p id="wfError" class="error" aria-live="polite"></p>
+      <div class="dialog-actions">
+        <button type="button" class="ghost-btn" data-close-dialog="workflowDialog">キャンセル</button>
+        <button type="submit" class="primary-btn">保存</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="./data/categories.js?v=27"></script>
+  <script src="./data/gear.js?v=32"></script>
+  <script src="./data/software.js?v=7"></script>
+  <script src="./data/computers.js?v=6"></script>
+  <script src="./data/terms.js?v=34"></script>
+  <script src="./data/videos.js"></script>
+  <script src="./data/workflows.js"></script>
+  <script src="./data/connections.js?v=14"></script>
+  <script src="./data/brands.js?v=28"></script>
+  <script src="./data/diy.js?v=2"></script>
+  <script src="./js/app.js?v=65"></script>
+</body>
+</html>
