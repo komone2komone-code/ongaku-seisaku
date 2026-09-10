@@ -1218,6 +1218,11 @@ img { max-width: 100%; display: block; }
 .term-explain h3 {
   font-size: 18px;
 }
+.term-explain p {
+  overflow-wrap: break-word;
+  font-size: 16px;
+  line-height: 1.8;
+}
 .home-rel p a {
   font-weight: 700;
   color: #3E6E8F;
@@ -1802,6 +1807,20 @@ img { max-width: 100%; display: block; }
   paint-order: stroke;
 }
 
+@media (max-width: 699px) {
+  .card-menu-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+  .item-row .card-menu-btn {
+    top: 6px;
+    right: 6px;
+  }
+  .item-row {
+    padding-right: 46px;
+  }
+}
 @media (max-width: 379px) {
   .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .transfer-btn {

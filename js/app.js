@@ -780,10 +780,23 @@
     return `<span class="badge ${esc(status)}">${esc(label)}</span>`;
   }
 
+  function assetRoot() {
+    try {
+      const path = String(location.pathname || "/").replace(/index\.html$/i, "");
+      if (path.endsWith("/")) return path;
+      const slash = path.lastIndexOf("/");
+      return slash >= 0 ? path.slice(0, slash + 1) : "/";
+    } catch {
+      return "./";
+    }
+  }
+
   function resolveAsset(path) {
     if (!path) return "";
-    if (/^https?:\/\//i.test(path)) return path;
-    return (DTM.imageBase || "") + path;
+    if (/^(https?:\/\/|data:|blob:)/i.test(path)) return path;
+    const rel = String(path).replace(/^\.\//, "");
+    if (rel.startsWith("/")) return rel;
+    return (DTM.imageBase || assetRoot()) + rel;
   }
 
   function keepImageFields(from, payload) {

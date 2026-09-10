@@ -1,4 +1,4 @@
-const CACHE_NAME = "ongaku-seisaku-v1";
+const CACHE_NAME = "ongaku-seisaku-v2";
 const PRECACHE = [
   "./",
   "./index.html",
